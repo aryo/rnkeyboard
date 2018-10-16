@@ -226,12 +226,17 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 final Activity activity = getCurrentActivity();
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
+                
+                try {
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
+                    }
+                    
+                    edit.setTag(TAG_ID, null);
+                } catch (IllegalViewOperationException e) {
+                    
                 }
-
-                edit.setTag(TAG_ID, null);
             }
         });
     }
@@ -265,21 +270,25 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                final Activity activity = getCurrentActivity();
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
-                }
+                try {
+                    final Activity activity = getCurrentActivity();
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
+                    }
 
-                Integer maxLength = mKeyboardToMaxInputLength.get(tag);
-                if (maxLength != null && edit.getText().length() >= maxLength ){
-                    return;
-                }
+                    Integer maxLength = mKeyboardToMaxInputLength.get(tag);
+                    if (maxLength != null && edit.getText().length() >= maxLength ){
+                        return;
+                    }
 
-                int start = Math.max(edit.getSelectionStart(), 0);
-                int end = Math.max(edit.getSelectionEnd(), 0);
-                edit.getText().replace(Math.min(start, end), Math.max(start, end),
-                        text, 0, text.length());
+                    int start = Math.max(edit.getSelectionStart(), 0);
+                    int end = Math.max(edit.getSelectionEnd(), 0);
+                    edit.getText().replace(Math.min(start, end), Math.max(start, end),
+                            text, 0, text.length());
+                } catch (Exception e) {
+                    
+                }
             }
         });
     }
@@ -289,18 +298,22 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                final Activity activity = getCurrentActivity();
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
-                }
+                try {
+                    final Activity activity = getCurrentActivity();
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
+                    }
 
-                int start = Math.max(edit.getSelectionStart(), 0);
-                int end = Math.max(edit.getSelectionEnd(), 0);
-                if (start != end) {
-                    edit.getText().delete(start, end);
-                } else if (start > 0) {
-                    edit.getText().delete(start - 1, end);
+                    int start = Math.max(edit.getSelectionStart(), 0);
+                    int end = Math.max(edit.getSelectionEnd(), 0);
+                    if (start != end) {
+                        edit.getText().delete(start, end);
+                    } else if (start > 0) {
+                        edit.getText().delete(start - 1, end);
+                    }
+                } catch (Exception e) {
+                    
                 }
             }
         });
@@ -311,17 +324,21 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
-                }
+                try {
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
+                    }
 
-                int start = Math.max(edit.getSelectionStart(), 0);
-                int end = Math.max(edit.getSelectionEnd(), 0);
-                if (start != end) {
-                    edit.getText().delete(start, end);
-                } else if (start > 0) {
-                    edit.getText().delete(start, end + 1);
+                    int start = Math.max(edit.getSelectionStart(), 0);
+                    int end = Math.max(edit.getSelectionEnd(), 0);
+                    if (start != end) {
+                        edit.getText().delete(start, end);
+                    } else if (start > 0) {
+                        edit.getText().delete(start, end + 1);
+                    }
+                } catch (Exception e) {
+                    
                 }
             }
         });
@@ -332,18 +349,22 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                final Activity activity = getCurrentActivity();
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
-                }
+                try {
+                    final Activity activity = getCurrentActivity();
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
+                    }
 
-                int start = Math.max(edit.getSelectionStart(), 0);
-                int end = Math.max(edit.getSelectionEnd(), 0);
-                if (start != end) {
-                    edit.setSelection(start, start);
-                } else {
-                    edit.setSelection(start - 1, start - 1);
+                    int start = Math.max(edit.getSelectionStart(), 0);
+                    int end = Math.max(edit.getSelectionEnd(), 0);
+                    if (start != end) {
+                        edit.setSelection(start, start);
+                    } else {
+                        edit.setSelection(start - 1, start - 1);
+                    }
+                } catch (Exception e) {
+                    
                 }
             }
         });
@@ -354,18 +375,22 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                final Activity activity = getCurrentActivity();
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
-                }
+                try {
+                    final Activity activity = getCurrentActivity();
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
+                    }
 
-                int start = Math.max(edit.getSelectionStart(), 0);
-                int end = Math.max(edit.getSelectionEnd(), 0);
-                if (start != end) {
-                    edit.setSelection(end, end);
-                } else if (start > 0) {
-                    edit.setSelection(end + 1, end + 1);
+                    int start = Math.max(edit.getSelectionStart(), 0);
+                    int end = Math.max(edit.getSelectionEnd(), 0);
+                    if (start != end) {
+                        edit.setSelection(end, end);
+                    } else if (start > 0) {
+                        edit.setSelection(end + 1, end + 1);
+                    }
+                } catch (Exception e) {
+                    
                 }
             }
         });
@@ -376,23 +401,27 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                final Activity activity = getCurrentActivity();
-                final ReactEditText edit = getEditById(tag);
-                if (edit == null) {
-                    return;
-                }
-
-                View keyboard = (View) edit.getTag(TAG_ID);
-                if (keyboard.getParent() != null) {
-                    ((ViewGroup) keyboard.getParent()).removeView(keyboard);
-                }
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        ((InputMethodManager) getReactApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE)).showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
+                try {
+                    final Activity activity = getCurrentActivity();
+                    final ReactEditText edit = getEditById(tag);
+                    if (edit == null) {
+                        return;
                     }
-                });
+
+                    View keyboard = (View) edit.getTag(TAG_ID);
+                    if (keyboard.getParent() != null) {
+                        ((ViewGroup) keyboard.getParent()).removeView(keyboard);
+                    }
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            ((InputMethodManager) getReactApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE)).showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
+                } catch (Exception e) {
+                    
+                }
             }
         });
     }
