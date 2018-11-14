@@ -10,6 +10,8 @@ import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.RelativeLayout;
@@ -37,6 +39,7 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
     private final ReactApplicationContext reactContext;
     public static ReactInstanceManager rnInstanceManager;
 
+    private String mDefaultInputMethodPkg;
     private Method setShowSoftInputOnFocusMethod;
     private Method setSoftInputShownOnFocusMethod;
 
@@ -49,6 +52,7 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         super(reactContext);
         this.reactContext = reactContext;
         initReflectMethod();
+        readDefaultInputMethodPkgName(reactContext);
     }
 
     private void initReflectMethod () {
@@ -67,6 +71,21 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
         }
     }
 
+    
+    private void readDefaultInputMethodPkgName(ReactApplicationContext context) {
+        if (context != null) {
+            String mDefaultInputMethodCls = Settings.Secure.getString(
+                                                                      context.getContentResolver(),
+                                                                      Settings.Secure.DEFAULT_INPUT_METHOD);
+            //输入法类名信息
+            if (!TextUtils.isEmpty(mDefaultInputMethodCls)) {
+                //输入法包名
+                mDefaultInputMethodPkg = mDefaultInputMethodCls.split("/")[0];
+                Log.d(TAG, "mDefaultInputMethodPkg=" + mDefaultInputMethodPkg);
+            }
+        }
+    }
+    
     private ReactEditText getEditById(int id) throws IllegalViewOperationException{
         UIViewOperationQueue uii = this.getReactApplicationContext().getNativeModule(UIManagerModule.class).getUIImplementation().getUIViewOperationQueue();
         return (ReactEditText) uii.getNativeViewHierarchyManager().resolveView(id);
@@ -77,7 +96,8 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
 //                Log.i(TAG, "showKeyboard ------ resultCode=" + resultCode);
-                if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN || resultCode == InputMethodManager.RESULT_HIDDEN) {
+                if ((resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN || resultCode == InputMethodManager.RESULT_HIDDEN) ||
+                    (resultCode == InputMethodManager.RESULT_UNCHANGED_SHOWN && "com.iflytek.inputmethod".equals(mDefaultInputMethodPkg))) {
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -92,6 +112,7 @@ public class RNCustomKeyboardModule extends ReactContextBaseJavaModule {
             }
         };
 
+        // 这里必须延时一下，不然可能键盘无法正常关闭
         mHandler.post(new Runnable() {
             @Override
             public void run() {
