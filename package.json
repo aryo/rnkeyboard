@@ -1,6 +1,6 @@
 {
   "name": "@unpourtous/react-native-custom-keyboard",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "react native custom keyboard for both Android and iOS",
   "main": "index.js",
   "scripts": {
