@@ -66,11 +66,11 @@ export class CustomTextInput extends Component {
     );
   }
   componentWillReceiveProps(newProps) {
-    if (this.props.customKeyboardType && newProps.customKeyboardType && newProps.customKeyboardType !== this.props.customKeyboardType) {
+    if (newProps.customKeyboardType !== this.props.customKeyboardType || newProps.maxLength !== this.props.maxLength) {
       install(
         findNodeHandle(this.input),
         newProps.customKeyboardType,
-        newProps.maxLength === undefined ? 1024 : this.props.maxLength,
+        newProps.maxLength === undefined ? 1024 : newProps.maxLength,
         getKeyboardHeightByType(newProps.customKeyboardType)
       );
     }
