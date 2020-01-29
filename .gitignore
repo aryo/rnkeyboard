@@ -2,3 +2,6 @@ build
 npm-debug*
 .idea
 node_modules
+*.iml
+.gradle
+local.properties

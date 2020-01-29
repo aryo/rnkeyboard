@@ -1,20 +1,20 @@
 
-package cn.reactnative.customkeyboard;
+package com.spoke.RNKeyboardlessTextInput;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.facebook.react.ReactInstanceManager;
+
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.RNCustomKeyboardModule;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
-public class RNCustomKeyboardPackage implements ReactPackage {
+
+public class TextInputPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RNCustomKeyboardModule(reactContext));
+      return Arrays.<NativeModule>asList(new TextInputModule(reactContext));
     }
 
     public List<Class<? extends JavaScriptModule>> createJSModules() {

@@ -1,7 +1,7 @@
 {
-  "name": "@unpourtous/react-native-custom-keyboard",
-  "version": "1.1.7",
-  "description": "react native custom keyboard for both Android and iOS",
+  "name": "react-native-keyboardless-text-input",
+  "version": "0.1.0",
+  "description": "react native text input with no soft keyboard when focused",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +16,6 @@
   "author": "",
   "license": "",
   "peerDependencies": {
-    "react-native": "^0.50.0"
+    "react-native": "^0.60.0"
   }
 }

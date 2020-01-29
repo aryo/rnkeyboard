@@ -1,88 +1,41 @@
-
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 
 import {
   NativeModules,
   TextInput,
   findNodeHandle,
-  AppRegistry
+  Platform
 } from 'react-native';
-import PropTypes from 'prop-types'
 
-const { CustomKeyboard} = NativeModules;
+const { RNKeyboardlessTextInput } = NativeModules;
+const { setup, insertText, removeText } = RNKeyboardlessTextInput;
+const isIOS = Platform.OS === "ios";
 
-const {
-  install, uninstall, getSelectionRange,
-  insertText, backSpace, doDelete,
-  moveLeft, moveRight,
-  switchSystemKeyboard,
-} = CustomKeyboard;
+export const KeyboardlessTextInput = forwardRef((props, ref) => {
+  const inputRef = useRef(null);
+  const getReactTag = () => findNodeHandle(inputRef.current);
 
-export {
-  install, uninstall, getSelectionRange,
-  insertText, backSpace, doDelete,
-  moveLeft, moveRight,
-  switchSystemKeyboard,
-};
+  // Hiding keyboard is not available out of the box on iOS, so we need to set it up natively to use a dummy view
+  isIOS && useEffect(() => {
+    setup(getReactTag());
+  }, []);
 
-const keyboardTypeRegistry = {};
-const defaultKeyboardHeight = 216
+  useImperativeHandle(ref, () => {
+    const reactTag = getReactTag();
+    return {
+      insert: text => insertText(reactTag, text),
+      del: () => removeText(reactTag)
+    };
+  });
 
-export function register(type, keyboardInfo) {
-  keyboardTypeRegistry[type] = keyboardInfo;
-}
-const getKeyboardHeightByType = (type) => {
-  const height = keyboardTypeRegistry[type].height
-  return height || defaultKeyboardHeight
-}
+  return (
+      <TextInput
+          {...props}
+          keyboardType={'numeric'}
+          ref={inputRef}
+          showSoftInputOnFocus={false} // Android only
+      />
+  );
+});
 
-class CustomKeyboardContainer extends Component {
-  render() {
-    const {tag, type} = this.props;
-    const factory = keyboardTypeRegistry[type].factory;
-    const inputFilter = keyboardTypeRegistry[type].inputFilter
-    if (!factory) {
-      console.warn(`Custom keyboard type ${type} not registered.`);
-      return null;
-    }
-    const Comp = factory();
-    return <Comp tag={tag} inputFilter={inputFilter} />;
-  }
-}
-
-AppRegistry.registerComponent("CustomKeyboard", ()=>CustomKeyboardContainer);
-
-export class CustomTextInput extends Component {
-  static propTypes = {
-    ...TextInput.propTypes,
-    customKeyboardType: PropTypes.string,
-  };
-  componentDidMount() {
-    install(
-      findNodeHandle(this.input),
-      this.props.customKeyboardType,
-      this.props.maxLength === undefined ? 1024 : this.props.maxLength,
-      getKeyboardHeightByType(this.props.customKeyboardType)
-    );
-  }
-  componentWillReceiveProps(newProps) {
-    if (newProps.customKeyboardType !== this.props.customKeyboardType || newProps.maxLength !== this.props.maxLength) {
-      install(
-        findNodeHandle(this.input),
-        newProps.customKeyboardType,
-        newProps.maxLength === undefined ? 1024 : newProps.maxLength,
-        getKeyboardHeightByType(newProps.customKeyboardType)
-      );
-    }
-  }
-  onRef = ref => {
-    if (ref) {
-    this.input = ref;
-    }
-  };
-  render() {
-    const { customKeyboardType, ...others } = this.props;
-    return <TextInput {...others} keyboardType={'numeric'} ref={this.onRef}/>;
-  }
-}
-
+KeyboardlessTextInput.propTypes = TextInput.propTypes;
